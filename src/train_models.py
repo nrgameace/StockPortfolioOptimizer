@@ -8,8 +8,8 @@ import joblib
 def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"]):
     #Define the path to the data
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-    data_dir = os.path.join(project_root, "data", "raw")
-    model_dir = os.path.join(project_root, "models")
+    data_dir = os.path.join(project_root, "StockPortfolioOptimizer", "data", "raw")
+    model_dir = os.path.join(project_root, "StockPortfolioOptimizer","models")
     os.makedirs(data_dir, exist_ok=True)
 
     path = os.path.join(data_dir,"TRAINING_DATA.csv")
