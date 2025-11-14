@@ -16,7 +16,7 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
     train_data = pd.read_csv(path)
 
     for ticker in tickers:
-        features = [col for col in train_data.columns if "AAPL" in col and "Close" not in col]
+        features = [col for col in train_data.columns if ticker in col and "Close" not in col]
         x = train_data[features]
         y = train_data[f'{ticker}_Close'].shift(-1)
         x, y = x[:-1], y[:-1]
