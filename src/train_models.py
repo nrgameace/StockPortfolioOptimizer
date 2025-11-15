@@ -18,11 +18,12 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
     
 
     for ticker in tickers:
-        train_data = train_data[train_data[f"{ticker}_Close"] != 0]
-        features = [col for col in train_data.columns if ticker in col and "Close" not in col]
-        x = train_data[features]
-        future_price = train_data[f'{ticker}_Close'].shift(-horizon)
-        y = (future_price - train_data[f"{ticker}_Close"]) / train_data[f"{ticker}_Close"]
+        df = train_data.copy()
+        df = df[df[f"{ticker}_Close"] != 0] 
+        features = [col for col in df.columns if ticker in col and "Close" not in col]
+        x = df[features]
+        future_price = df[f'{ticker}_Close'].shift(-horizon)
+        y = (future_price - df[f"{ticker}_Close"]) / df[f"{ticker}_Close"]
         x, y = x[:-horizon], y[:-horizon]
 
         X_train, X_test, y_train, y_test = train_test_split(x,y, test_size = .2, shuffle = False)
@@ -46,4 +47,4 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
 
 if __name__ == "__main__":
     tickers = ["AAPL","MSFT","NVDA","AMZN","JNJ","JPM","XOM","CAT","PG","NEE"]
-    train_models(tickers, 60)
+    train_models(tickers, 20)
