@@ -8,15 +8,15 @@ def main(tickers, horizon = 20):
     print(optimizer(mu_array, cov_matrix))
 
     eps = 1e-8
-    w = np.maximum(mu_array, eps)        # set tiny/negative -> eps
+    w = np.maximum(mu_array, eps)        
     w = w / w.sum()                   # renormalize to sum to 1
 
-    # 2) Metrics
-    exp_return = float(mu_array @ w)        # expected portfolio return (fraction)
-    vol = float(np.sqrt(w @ cov_matrix @ w))  # portfolio std dev (fraction)
+    # Metrics
+    exp_return = float(mu_array @ w)        # expected portfolio return 
+    vol = float(np.sqrt(w @ cov_matrix @ w))  # portfolio std dev
     sharpe = exp_return / vol if vol > 0 else np.nan
 
-    # 3) Print nicely
+    # Print Metrics
     for t, weight in enumerate(w):
         print(f"{t:2d}: {weight*100:6.2f}%")
     print(f"\nSum weights: {w.sum():.6f}")
