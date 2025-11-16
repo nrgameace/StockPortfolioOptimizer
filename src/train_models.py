@@ -22,17 +22,17 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
         df = train_data.copy()
         df = df[df[f"{ticker}_Close"] != 0]  # remove rows with missing/0 returns
 
-        # Features (exclude Close columns)
+        # Features 
         features = [col for col in df.columns if ticker in col and "Close" not in col]
         x = df[features]
 
-        # Target is the future return over `horizon` days
+        # Target is the future return over horizon days
         y = df[f"{ticker}_Close"].shift(-horizon)
 
         # Remove last `horizon` rows because target is NaN after shift
         x, y = x[:-horizon], y[:-horizon]
 
-        # Train-test split (time series: no shuffle)
+        # Train-test split
         X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=False)
 
         # Train Random Forest
