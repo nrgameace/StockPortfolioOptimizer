@@ -4,6 +4,7 @@ from sklearn.metrics import mean_squared_error
 import pandas as pd
 import os
 import joblib
+import numpy as np
 
 def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"], horizon = 20):
 
@@ -19,25 +20,29 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
 
     for ticker in tickers:
         df = train_data.copy()
-        df = df[df[f"{ticker}_Close"] != 0] 
+        df = df[df[f"{ticker}_Close"] != 0]  # remove rows with missing/0 returns
+
+        # Features (exclude Close columns)
         features = [col for col in df.columns if ticker in col and "Close" not in col]
         x = df[features]
-        future_price = df[f'{ticker}_Close'].shift(-horizon)
-        y = (future_price - df[f"{ticker}_Close"]) / df[f"{ticker}_Close"]
+
+        # Target is the future return over `horizon` days
+        y = df[f"{ticker}_Close"].shift(-horizon)
+
+        # Remove last `horizon` rows because target is NaN after shift
         x, y = x[:-horizon], y[:-horizon]
 
-        X_train, X_test, y_train, y_test = train_test_split(x,y, test_size = .2, shuffle = False)
-        model = RandomForestRegressor(n_estimators = 200, random_state = 42)
+        # Train-test split (time series: no shuffle)
+        X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, shuffle=False)
+
+        # Train Random Forest
+        model = RandomForestRegressor(n_estimators=200, random_state=42)
         model.fit(X_train, y_train)
 
-
-        # Predictions
+        # Predictions and metrics
         preds = model.predict(X_test)
-        
-        # Compute MSE and RMSE in price units
         mse = mean_squared_error(y_test, preds)
-        rmse = mse ** 0.5
-
+        rmse = np.sqrt(mse)
         print(f"{ticker} Test MSE: {mse:.6f}, RMSE: {rmse:.6f}")
 
         # Save model
