@@ -6,40 +6,33 @@ import os
 class BacktestEngine:
 
     # Constructor for Backtest Engine
-    def __init__(self, weights, initial_value, tickers):
+    def __init__(self, initial_value, tickers, start_date):
         # Define dataset path
         project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
         data_dir = os.path.join(project_root, "StockPortfolioOptimizer", "data", "raw")
         path = os.path.join(data_dir,"TRAINING_DATA.csv")
 
         # Initialize instance variables
-        self.weights = np.array(weights)
         self.data = pd.read_csv(path)
-        self.day = 0
+        self.day = start_date
         self.current_value = initial_value
         self.values = [initial_value]
         self.tickers = tickers
       
     # Simulates the return for one day and calculates the new portfolio value 
-    def simulate_one_day(self):
+    def simulate_one_day(self, weights):
         day_data = self.data.iloc[self.day]
         returns_for_day = []
 
         for ticker in self.tickers:
             returns_for_day.append(day_data[f"{ticker}_Returns"])
         
-        weighted_return = np.dot(self.weights, returns_for_day)
+        weighted_return = np.dot(weights, returns_for_day)
         self.current_value = self.current_value * (1 + weighted_return)
         self.values.append(self.current_value)
+        self.day += 1
 
-
-    # Simulates the given weights over a specified amount of time
-    def run_backtest(self, num_days):
-        for i in range(num_days):
-            if (i < len(self.data)):
-                self.simulate_one_day()
-                self.day += 1
-
+    def final_portfolio_value(self):
         return self.current_value
 
     # Computes several metrics based on backtesting results
@@ -57,6 +50,7 @@ class BacktestEngine:
 
         return {
         "Total Return": total_return,
+        "Ending Value": self.current_value,
         "CAGR": cagr,
         "Daily Volatility": daily_volatility,
         "Sharpe Ratio": sharpe_ratio

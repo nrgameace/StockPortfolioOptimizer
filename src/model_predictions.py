@@ -3,7 +3,7 @@ import os
 from joblib import load
 
 
-def model_predictions(tickers, horizon = 1):
+def model_predictions(tickers, day, horizon = 1):
     models = load_models(tickers)
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
     model_dir = os.path.join(project_root, "StockPortfolioOptimizer","data","raw")
@@ -16,17 +16,18 @@ def model_predictions(tickers, horizon = 1):
     returns = returns.dropna()
     cov_matrix = returns.cov().values  # n x n numpy array
 
-    print("Covariance matrix:")
-    print(cov_matrix)
 
+    # Predict next-day return for each ticker
     for i, ticker in enumerate(tickers):
-        # Prepare features for prediction
+        # Features for prediction: all columns related to the ticker except returns
         features = [col for col in df.columns if ticker in col and "Returns" not in col]
-        last_features = df[features].iloc[-horizon:]  # last `horizon` rows
+
+        # Use the last available row as today's features
+        last_features = df[features].iloc[[day]]  # double brackets keep it as DataFrame
         pred = models[i].predict(last_features)
 
-        # Take the last prediction as 20-day ahead return
-        mu_vector.append(pred[-1])
+        # Store the 1-day ahead prediction
+        mu_vector.append(pred[0])
 
     return mu_vector, cov_matrix
 
@@ -47,9 +48,3 @@ def load_models(tickers):
     return models
 
 
-
-
-tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"]
-mu_vector, matrix = model_predictions(tickers)
-print(mu_vector)
-print(matrix)

@@ -6,7 +6,7 @@ import os
 import joblib
 import numpy as np
 
-def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"], horizon = 1):
+def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"], horizon = 1, start_row = 0, end_row = None):
 
     #Define the path to the data
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
@@ -20,6 +20,7 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
 
     for ticker in tickers:
         df = train_data.copy()
+        df = df[start_row:end_row]
         df = df[df[f"{ticker}_Returns"] != 0]  # remove rows with missing/0 returns
 
         # Features 
