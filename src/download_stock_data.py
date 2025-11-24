@@ -14,14 +14,14 @@ def download_stocks(tickers, start_date='2020-01-01', end_date='2025-01-01'):
     all_data = pd.DataFrame()
     for ticker in tickers:
         data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)
-        # Keep only Close and Volume
-        features = data[['Close', 'Volume']].copy()
-        features.columns = [f"{ticker}_Close", f"{ticker}_Volume"]
+        # Keep only Return and Volume
+        features = data[['Returns', 'Volume']].copy()
+        features.columns = [f"{ticker}_Returns", f"{ticker}_Volume"]
         all_data = pd.concat([all_data, features], axis=1)
         time.sleep(1)  # Avoid hitting API limits
 
     # Compute daily returns
-    returns = all_data[[col for col in all_data.columns if "_Close" in col]].pct_change().dropna()
+    returns = all_data[[col for col in all_data.columns if "_Returns" in col]].pct_change().dropna()
     volume = all_data[[col for col in all_data.columns if "_Volume" in col]].iloc[1:]
 
     # Merge returns and volume
@@ -29,11 +29,11 @@ def download_stocks(tickers, start_date='2020-01-01', end_date='2025-01-01'):
     ml_data = ml_data.sort_index().reset_index(drop=True)
 
     # Compute market average
-    ml_data["Market_Avg"] = ml_data[[f"{t}_Close" for t in tickers]].mean(axis=1)
+    ml_data["Market_Avg"] = ml_data[[f"{t}_Returns" for t in tickers]].mean(axis=1)
 
     # Generate features for each ticker
     for t in tickers:
-        r = ml_data[f"{t}_Close"]
+        r = ml_data[f"{t}_Returns"]
         v = ml_data[f"{t}_Volume"]
 
         # Lagged returns

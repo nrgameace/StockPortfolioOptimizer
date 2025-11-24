@@ -19,15 +19,14 @@ class BacktestEngine:
         self.current_value = initial_value
         self.values = [initial_value]
         self.tickers = tickers
-
-        
+      
     # Simulates the return for one day and calculates the new portfolio value 
     def simulate_one_day(self):
         day_data = self.data.iloc[self.day]
         returns_for_day = []
 
         for ticker in self.tickers:
-            returns_for_day.append(day_data[f"{ticker}_Close"])
+            returns_for_day.append(day_data[f"{ticker}_Returns"])
         
         weighted_return = np.dot(self.weights, returns_for_day)
         self.current_value = self.current_value * (1 + weighted_return)

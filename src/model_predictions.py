@@ -3,7 +3,7 @@ import os
 from joblib import load
 
 
-def model_predictions(tickers, horizon = 20):
+def model_predictions(tickers, horizon = 1):
     models = load_models(tickers)
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
     model_dir = os.path.join(project_root, "StockPortfolioOptimizer","data","raw")
@@ -11,7 +11,7 @@ def model_predictions(tickers, horizon = 20):
     df = pd.read_csv(path)
     mu_vector = []
 
-    returns = df[[f"{ticker}_Close" for ticker in tickers]]
+    returns = df[[f"{ticker}_Returns" for ticker in tickers]]
 
     returns = returns.dropna()
     cov_matrix = returns.cov().values  # n x n numpy array
@@ -21,7 +21,7 @@ def model_predictions(tickers, horizon = 20):
 
     for i, ticker in enumerate(tickers):
         # Prepare features for prediction
-        features = [col for col in df.columns if ticker in col and "Close" not in col]
+        features = [col for col in df.columns if ticker in col and "Returns" not in col]
         last_features = df[features].iloc[-horizon:]  # last `horizon` rows
         pred = models[i].predict(last_features)
 

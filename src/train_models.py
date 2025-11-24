@@ -6,7 +6,7 @@ import os
 import joblib
 import numpy as np
 
-def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"], horizon = 20):
+def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"], horizon = 1):
 
     #Define the path to the data
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
@@ -20,14 +20,14 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
 
     for ticker in tickers:
         df = train_data.copy()
-        df = df[df[f"{ticker}_Close"] != 0]  # remove rows with missing/0 returns
+        df = df[df[f"{ticker}_Returns"] != 0]  # remove rows with missing/0 returns
 
         # Features 
-        features = [col for col in df.columns if ticker in col and "Close" not in col]
+        features = [col for col in df.columns if ticker in col and "Returns" not in col]
         x = df[features]
 
         # Target is the future return over horizon days
-        y = df[f"{ticker}_Close"].shift(-horizon)
+        y = df[f"{ticker}_Returns"].shift(-horizon)
 
         # Remove last `horizon` rows because target is NaN after shift
         x, y = x[:-horizon], y[:-horizon]
