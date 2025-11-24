@@ -61,5 +61,3 @@ def download_stocks(tickers, start_date='2020-01-01', end_date='2025-01-01'):
 
     path = os.path.join(data_dir, "TRAINING_DATA.csv")
     ml_data.to_csv(path, index=False)
-
-    return ml_data
