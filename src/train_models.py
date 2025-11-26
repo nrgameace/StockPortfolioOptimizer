@@ -21,7 +21,7 @@ def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM",
     for ticker in tickers:
         df = train_data.copy()
         df = df[start_row:end_row]
-        df = df[df[f"{ticker}_Returns"] != 0]  # remove rows with missing/0 returns
+        df = df.dropna(subset=[f"{ticker}_Returns"])  # remove rows with missing values
 
         # Features 
         features = [col for col in df.columns if ticker in col and "Returns" not in col]

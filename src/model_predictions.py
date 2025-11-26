@@ -3,17 +3,18 @@ import os
 from joblib import load
 
 
-def model_predictions(tickers, day, horizon = 1):
+def model_predictions(tickers, day, end_date, horizon = 1):
     models = load_models(tickers)
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-    model_dir = os.path.join(project_root, "StockPortfolioOptimizer","data","raw")
-    path = os.path.join(model_dir,"TRAINING_DATA.csv")
+    data_dir = os.path.join(project_root, "StockPortfolioOptimizer","data","raw")
+    path = os.path.join(data_dir,"TRAINING_DATA.csv")
     df = pd.read_csv(path)
     mu_vector = []
 
     returns = df[[f"{ticker}_Returns" for ticker in tickers]]
 
     returns = returns.dropna()
+    returns = returns[0:end_date]
     cov_matrix = returns.cov().values  # n x n numpy array
 
 
@@ -21,7 +22,7 @@ def model_predictions(tickers, day, horizon = 1):
     for i, ticker in enumerate(tickers):
         # Features for prediction: all columns related to the ticker except returns
         features = [col for col in df.columns if ticker in col and "Returns" not in col]
-
+        #df = df.shift(-horizon)
         # Use the last available row as today's features
         last_features = df[features].iloc[[day]]  # double brackets keep it as DataFrame
         pred = models[i].predict(last_features)
