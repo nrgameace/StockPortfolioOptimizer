@@ -46,9 +46,18 @@
         .then(data => {
             // 4. Handle the successful response from FastAPI
             const tickersList = data.tickers.join(', ');
+            
+            // Create a formatted list of tickers with their weights as percentages
+            const weightsDisplay = data.tickers.map((ticker, index) => {
+                const weight = (data.weights[index] * 100).toFixed(2);
+                return `${ticker}: ${weight}%`;
+            }).join('<br>');
+            
             outputParagraph.innerHTML = `✅ **Success!** Data processed.<br>
                                          **Tickers:** ${tickersList}<br>
-                                         **Budget:** $${data.initial_value.toFixed(2)}`;
+                                         **Budget:** $${data.initial_value.toFixed(2)}<br>
+                                         <br><strong>Portfolio Weights:</strong><br>
+                                         ${weightsDisplay}`;
             console.log("API Response Data:", data);
         })
         .catch(error => {

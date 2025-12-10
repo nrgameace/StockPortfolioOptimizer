@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware # <--- NEW LINE
 from pydantic import BaseModel
+from src.next_day_weights import next_day_weights
 
 app = FastAPI()
 
@@ -35,8 +36,11 @@ async def process_stock_and_budget_data(data: StockBudgetInput):
     initial_value_received = data.initial_value
     print("Recieved data")
     print(tickers_received)
+    tickers_received = tickers_received.split(',')
+    weights = next_day_weights(tickers_received, initial_value_received)
     return {
         "status": "done",
-        "tickers": tickers_received.split(','),
+        "tickers": tickers_received,
         "initial_value": initial_value_received,
+        "weights": weights,
     }

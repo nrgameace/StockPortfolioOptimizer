@@ -1,33 +1,35 @@
 import yfinance as yf
-from datetime import date, timedelta
 import time
 import pandas as pd
-from optimized_weights import optimizer
-from model_predictions import load_models
+from .optimized_weights import optimizer
+from .model_predictions import load_models
 import os
 def next_day_weights(tickers, initial_value):
-    currentDate = date.today() - timedelta(days=1)
-
 
     # Download stock data
     all_data = pd.DataFrame()
     for ticker in tickers:
-        data = yf.download(ticker, period="1d",auto_adjust=True)
+        data = yf.download(ticker, period="2mo",auto_adjust=True)
         # data = yf.download(ticker, start=currentDate - timedelta(days=1), end=currentDate, auto_adjust=True)
         # Keep only Return and Volume
+        print(data)
+        data['Returns'] = data['Close']
         features = data[['Returns', 'Volume']].copy()
         features.columns = [f"{ticker}_Returns", f"{ticker}_Volume"]
         all_data = pd.concat([all_data, features], axis=1)
         time.sleep(1)  # Avoid hitting API limits
 
+        if data.empty:
+            raise RuntimeError("API hit limit")
+
     # Compute daily returns
     returns = all_data[[col for col in all_data.columns if "_Returns" in col]].pct_change().dropna()
     volume = all_data[[col for col in all_data.columns if "_Volume" in col]].iloc[1:]
-
+    print(all_data.head())
     # Merge returns and volume
     current_day_data = pd.concat([returns, volume], axis=1)
     current_day_data = current_day_data.sort_index().reset_index(drop=True)
-
+    print(current_day_data.head())
     # Compute market average
     current_day_data["Market_Avg"] = current_day_data[[f"{t}_Returns" for t in tickers]].mean(axis=1)
 
@@ -72,7 +74,7 @@ def next_day_weights(tickers, initial_value):
 
     returns = returns.dropna()
     cov_matrix = returns.cov().values  # n x n numpy array
-
+    print(current_day_data.head())
 
     # Predict next-day return for each ticker
     for i, ticker in enumerate(tickers):
@@ -80,7 +82,7 @@ def next_day_weights(tickers, initial_value):
         features = [col for col in current_day_data.columns if ticker in col and "Returns" not in col]
         #df = df.shift(-horizon)
         # Use the last available row as today's features
-        last_features = current_day_data[features].iloc[0]  # double brackets keep it as DataFrame
+        last_features = current_day_data[features].iloc[[-1]]  # double brackets keep it as DataFrame
         pred = models[i].predict(last_features)
 
         # Store the 1-day ahead prediction
@@ -94,7 +96,5 @@ def next_day_weights(tickers, initial_value):
 
     
 
-tickers = ["AAPL","MSFT","NVDA","AMZN","JNJ","JPM","XOM","CAT","PG","NEE"]
-initial_value = 10000
-next_day_weights(tickers,initial_value)
+
 
