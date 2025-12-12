@@ -28,6 +28,7 @@ app.add_middleware(
 class StockBudgetInput(BaseModel):
     tickers: str
     initial_value: float 
+    weights: list
 
 @app.post("/submit-portfolio")
 async def process_stock_and_budget_data(data: StockBudgetInput):
@@ -42,5 +43,5 @@ async def process_stock_and_budget_data(data: StockBudgetInput):
         "status": "done",
         "tickers": tickers_received,
         "initial_value": initial_value_received,
-        "weights": weights,
+        "weights": weights.tolist(),
     }

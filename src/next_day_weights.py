@@ -4,23 +4,11 @@ import pandas as pd
 from .optimized_weights import optimizer
 from .model_predictions import load_models
 import os
+from .save_next_day_data import download_next_day_data
 def next_day_weights(tickers, initial_value):
 
     # Download stock data
-    all_data = pd.DataFrame()
-    for ticker in tickers:
-        data = yf.download(ticker, period="2mo",auto_adjust=True)
-        # data = yf.download(ticker, start=currentDate - timedelta(days=1), end=currentDate, auto_adjust=True)
-        # Keep only Return and Volume
-        print(data)
-        data['Returns'] = data['Close']
-        features = data[['Returns', 'Volume']].copy()
-        features.columns = [f"{ticker}_Returns", f"{ticker}_Volume"]
-        all_data = pd.concat([all_data, features], axis=1)
-        time.sleep(1)  # Avoid hitting API limits
-
-        if data.empty:
-            raise RuntimeError("API hit limit")
+    all_data = download_next_day_data(tickers)
 
     # Compute daily returns
     returns = all_data[[col for col in all_data.columns if "_Returns" in col]].pct_change().dropna()

@@ -29,7 +29,8 @@
             // The body must be a JSON string, and the keys MUST match your Pydantic model
             body: JSON.stringify({
                 tickers: tickerData, 
-                initial_value: initialBudget.value 
+                initial_value: initialBudget.value,
+                weights: []
             })
         })
 

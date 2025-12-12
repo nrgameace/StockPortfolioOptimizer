@@ -14,3 +14,4 @@ if __name__ == "__main__":
     tickers = ["AAPL","MSFT","NVDA","AMZN","JNJ","JPM","XOM","CAT","PG","NEE"]
     new_stocks = False
     main(tickers, 20, new_stocks)
+#AAPL,MSFT,NVDA,AMZN,JNJ,JPM,XOM,CAT,PG,NEE
