@@ -1,14 +1,33 @@
-import yfinance as yf
-import time
 import pandas as pd
 from .optimized_weights import optimizer
 from .model_predictions import load_models
 import os
 from .save_next_day_data import download_next_day_data
+from .config import get_data_path
+from datetime import date
+
 def next_day_weights(tickers, initial_value):
 
-    # Download stock data
-    all_data = download_next_day_data(tickers)
+    # Download stock data only if todays stock data has not already been downloaded
+    data_dir = get_data_path()
+    files = list(data_dir.iterdir())
+    current_date = date.today()
+    have_current_day_data = False
+    for file in files:
+        if file.name == current_date:
+            have_current_day_data = True
+            break
+    all_data = pd.DataFrame()
+    if have_current_day_data:
+        print("Need to download data")
+        all_data = download_next_day_data(tickers)
+    else:
+        print("Already have data")
+        path = os.path.join(data_dir,f"{current_date}.csv")
+        all_data = pd.read_csv(path)
+
+
+    
 
     # Compute daily returns
     returns = all_data[[col for col in all_data.columns if "_Returns" in col]].pct_change().dropna()
@@ -52,8 +71,6 @@ def next_day_weights(tickers, initial_value):
     print(current_day_data.head())
 
     models = load_models(tickers)
-    project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-    data_dir = os.path.join(project_root, "StockPortfolioOptimizer","data","raw")
     path = os.path.join(data_dir,"TRAINING_DATA.csv")
     df = pd.read_csv(path)
     mu_vector = []
