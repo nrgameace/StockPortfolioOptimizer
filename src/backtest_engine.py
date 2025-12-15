@@ -6,7 +6,7 @@ import os
 class BacktestEngine:
 
     # Constructor for Backtest Engine
-    def __init__(self, initial_value, tickers, start_date):
+    def __init__(self, initial_value: float, tickers: list, start_date):
         # Define dataset path
         project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
         data_dir = os.path.join(project_root, "StockPortfolioOptimizer", "data", "raw")

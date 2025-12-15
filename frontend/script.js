@@ -30,7 +30,9 @@
             body: JSON.stringify({
                 tickers: tickerData, 
                 initial_value: initialBudget.value,
-                weights: []
+                weights: [],
+                expected_return: 0,
+                expected_variance: 0,
             })
         })
 
@@ -53,12 +55,14 @@
                 const weight = (data.weights[index] * 100).toFixed(2);
                 return `${ticker}: ${weight}%`;
             }).join('<br>');
-            
+            console.log(data.expected_return);
             outputParagraph.innerHTML = `✅ **Success!** Data processed.<br>
                                          **Tickers:** ${tickersList}<br>
                                          **Budget:** $${data.initial_value.toFixed(2)}<br>
                                          <br><strong>Portfolio Weights:</strong><br>
-                                         ${weightsDisplay}`;
+                                         ${weightsDisplay}
+                                         <br><br>Expected Portfolio Return: $${data.expected_return}</br></br>
+                                         Expected Portfolio Variance: ${data.expected_variance.toFixed(5)}`;
             console.log("API Response Data:", data);
         })
         .catch(error => {

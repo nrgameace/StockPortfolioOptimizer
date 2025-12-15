@@ -29,6 +29,8 @@ class StockBudgetInput(BaseModel):
     tickers: str
     initial_value: float 
     weights: list
+    expected_return: float
+    expected_variance: float
 
 @app.post("/submit-portfolio")
 async def process_stock_and_budget_data(data: StockBudgetInput):
@@ -38,10 +40,13 @@ async def process_stock_and_budget_data(data: StockBudgetInput):
     print("Recieved data")
     print(tickers_received)
     tickers_received = tickers_received.split(',')
-    weights = next_day_weights(tickers_received, initial_value_received)
+    weights, expected_return, expected_variance = next_day_weights(tickers_received, initial_value_received)
     return {
         "status": "done",
         "tickers": tickers_received,
         "initial_value": initial_value_received,
         "weights": weights.tolist(),
+        "expected_return": expected_return,
+        "expected_variance": expected_variance,
+        
     }

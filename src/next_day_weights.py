@@ -6,7 +6,7 @@ from .save_next_day_data import download_next_day_data
 from .config import get_data_path
 from datetime import date
 
-def next_day_weights(tickers, initial_value):
+def next_day_weights(tickers: list, initial_value: float):
 
     # Download stock data only if todays stock data has not already been downloaded
     data_dir = get_data_path()
@@ -14,17 +14,18 @@ def next_day_weights(tickers, initial_value):
     current_date = date.today()
     have_current_day_data = False
     for file in files:
-        if file.name == current_date:
+        if str(current_date) in str(file.name):
             have_current_day_data = True
             break
     all_data = pd.DataFrame()
     if have_current_day_data:
-        print("Need to download data")
-        all_data = download_next_day_data(tickers)
-    else:
         print("Already have data")
         path = os.path.join(data_dir,f"{current_date}.csv")
         all_data = pd.read_csv(path)
+        
+    else:
+        print("Need to download data")
+        all_data = download_next_day_data(tickers)
 
 
     
@@ -95,9 +96,10 @@ def next_day_weights(tickers, initial_value):
 
     
 
-    weights = optimizer(mu_vector, cov_matrix)
-    print(weights)
-    return weights
+    weights, portfolio_return, portfolio_variance = optimizer(mu_vector, cov_matrix)
+    portfolio_return = round(portfolio_return * initial_value,2)
+
+    return weights, portfolio_return, portfolio_variance
 
     
 
