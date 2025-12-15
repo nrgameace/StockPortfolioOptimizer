@@ -26,6 +26,10 @@ def next_day_weights(tickers: list, initial_value: float):
     else:
         print("Need to download data")
         all_data = download_next_day_data(tickers)
+        for file in files:
+            if "-" in str(file.name) and str(current_date) not in str(file.name):
+                os.remove(str(file))
+
 
 
     
