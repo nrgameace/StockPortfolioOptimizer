@@ -6,27 +6,27 @@
         const API_URL = 'http://127.0.0.1:8000/submit-portfolio';
 
         myButton.addEventListener('click', function() {
-            event.preventDefault();
-            const tickerData = tickers.value;
+            event.preventDefault(); // Prevents page refresh after button click
+            //const tickerData = tickers.value;
+            var rawTickerData = tickers.value;
+            const tickerData = rawTickerData.split(',');
 
-            outputParagraph.textContent = "LOADING ...";
-            console.log("Text from textbox: " + tickerData); // Optional: log to console
+            outputParagraph.textContent = "LOADING";
 
-            if (!tickerData || isNaN(initialBudget.value)) {
-            outputParagraph.textContent = "Please enter stock tickers and a valid initial budget.";
+            if (!tickerData || isNaN(initialBudget.value) || tickerData.length < 3) {
+            outputParagraph.textContent = "Please enter three or more stock tickers and a valid initial budget.";
             return;
         }
         
-            outputParagraph.textContent = "🚀 Sending data to API for processing...";
+            outputParagraph.textContent = "Sending data to API for processing...";
 
             fetch(API_URL, {
-            // CRITICAL: Must use the POST method
             method: 'POST', 
             headers: {
-                // Tells the server that the data being sent is in JSON format
+                
                 'Content-Type': 'application/json' 
             },
-            // The body must be a JSON string, and the keys MUST match your Pydantic model
+            // Must match Pydantic model specified earlier
             body: JSON.stringify({
                 tickers: tickerData, 
                 initial_value: initialBudget.value,
@@ -38,12 +38,10 @@
 
 
         .then(response => {
-            // Check if the server responded with an error status (e.g., 404, 500, 422)
             if (!response.ok) {
-                // Throw an error if the status is not successful (2xx)
                 throw new Error(`HTTP Error! Status: ${response.status}. Check console for details.`);
             }
-            // If successful, parse the JSON response body
+            // If success re
             return response.json(); 
         })
         .then(data => {
@@ -56,7 +54,7 @@
                 return `${ticker}: ${weight}%`;
             }).join('<br>');
             console.log(data.expected_return);
-            outputParagraph.innerHTML = `✅ **Success!** Data processed.<br>
+            outputParagraph.innerHTML = `**Success!** Data processed.<br>
                                          **Tickers:** ${tickersList}<br>
                                          **Budget:** $${data.initial_value.toFixed(2)}<br>
                                          <br><strong>Portfolio Weights:</strong><br>
@@ -67,7 +65,7 @@
         })
         .catch(error => {
             // 5. Handle any errors (network, parsing, HTTP status error)
-            outputParagraph.textContent = `❌ ERROR: Failed to process data. ${error.message}`;
+            outputParagraph.textContent = `ERROR: Failed to process data. ${error.message}`;
             console.error("Fetch operation failed:", error);
         });
         });

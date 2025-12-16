@@ -1,0 +1,8 @@
+Todo:
+Try XGBoost models
+Get more metrics to appear on the frontend - show sharpe ratio and comparison with S&P
+Ensure that when you only enter 2-3 tickers it still works
+Set restrictions so there must be 3 or more tickers
+Understandable error messages
+Review JS code
+Deploy to AWS

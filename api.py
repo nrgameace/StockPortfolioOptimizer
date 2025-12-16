@@ -5,15 +5,13 @@ from src.next_day_weights import next_day_weights
 
 app = FastAPI()
 
-# ----------------------------------------------------
-# 1. DEFINE ALLOWED ORIGINS (The domains/ports allowed to access your API)
-# Since you are running locally, use the origins below.
+# Allowed servers
 origins = [
-    # Allows requests from the localhost on the default port 8000 (if you have two APIs)
+    # Allow requests from localhost on port 8080
     "http://localhost:8000",
     # Allows requests from any origin (e.g., file:// or any other local port) - USE WITH CAUTION IN PRODUCTION!
     "http://127.0.0.1:8000",
-    "*" # Allows ALL origins. Easiest for local development but unsafe for production.
+    "http://127.0.0.1:3000"
 ]
 
 # 2. ADD THE MIDDLEWARE TO THE APP
@@ -25,22 +23,27 @@ app.add_middleware(
     allow_headers=["*"],            # Allows all headers
 )
 
+# Create a class using Pydantic to standardize data sent
 class StockBudgetInput(BaseModel):
-    tickers: str
+    tickers: list
     initial_value: float 
     weights: list
     expected_return: float
     expected_variance: float
 
+
 @app.post("/submit-portfolio")
 async def process_stock_and_budget_data(data: StockBudgetInput):
     
+    # Grab initial data being sent in
     tickers_received = data.tickers
     initial_value_received = data.initial_value
     print("Recieved data")
-    print(tickers_received)
-    tickers_received = tickers_received.split(',')
+
+
     weights, expected_return, expected_variance = next_day_weights(tickers_received, initial_value_received)
+
+    # POST returns JSON format
     return {
         "status": "done",
         "tickers": tickers_received,
