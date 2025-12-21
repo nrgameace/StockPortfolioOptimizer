@@ -13,11 +13,17 @@ def next_day_weights(tickers: list, initial_value: float):
     files = list(data_dir.iterdir())
     current_date = date.today()
     have_current_day_data = False
+
+    # Model list is defined without user input
+    MODEL_LIST = ["AAPL","MSFT","NVDA","AMZN","JNJ","JPM","XOM","CAT","PG","NEE"]
+
     for file in files:
         if str(current_date) in str(file.name):
             have_current_day_data = True
             break
+    
     all_data = pd.DataFrame()
+
     if have_current_day_data:
         print("Already have data")
         path = os.path.join(data_dir,f"{current_date}.csv")
@@ -25,7 +31,7 @@ def next_day_weights(tickers: list, initial_value: float):
         
     else:
         print("Need to download data")
-        all_data = download_next_day_data(tickers)
+        all_data = download_next_day_data(MODEL_LIST)
         for file in files:
             if "-" in str(file.name) and str(current_date) not in str(file.name):
                 os.remove(str(file))
