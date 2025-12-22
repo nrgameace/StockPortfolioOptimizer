@@ -5,13 +5,17 @@
         const outputParagraph = document.getElementById('output');
         const API_URL = 'http://127.0.0.1:8000/submit-portfolio';
 
-        myButton.addEventListener('click', function() {
+        myButton.addEventListener('click', function(event) {
             event.preventDefault(); // Prevents page refresh after button click
             //const tickerData = tickers.value;
-            var rawTickerData = tickers.value;
-            const tickerData = rawTickerData.split(',');
+            var rawTickerData = tickers.value.toUpperCase();
+            const tickerDataRaw = rawTickerData.split(',');
             const modelList = ["AAPL","MSFT","NVDA","AMZN","JNJ","JPM","XOM","CAT","PG","NEE"];
             let validData = true;
+
+            let tickerDataSet = new Set(tickerDataRaw);
+            const tickerData = Array.from(tickerDataSet);
+            console.log(tickerData);
 
             outputParagraph.textContent = "LOADING";
 
@@ -25,11 +29,16 @@
             }
             
             
-
             
-
+            
             if (!tickerData || isNaN(initialBudget.value) || tickerData.length < 3) {
                 outputParagraph.textContent = "Please enter three or more stock tickers. Comma separated with no spaces.";
+                return;
+            }
+
+            if (tickerData.length > modelList.length)
+            {
+                outputParagraph.textContent = "Ticker list has exceeded the number of avaliable stocks.";
                 return;
             }
 
@@ -45,6 +54,7 @@
                 outputParagraph.textContent = "Please input your initial budget.";
                 return;
             }
+            
         
             outputParagraph.textContent = "Sending data to API for processing...";
 
