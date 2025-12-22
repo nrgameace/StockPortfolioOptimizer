@@ -3,6 +3,6 @@ Try XGBoost models
 Get more metrics to appear on the frontend - show sharpe ratio and comparison with S&P
 Ensure that when you only enter 2-3 tickers it still works - FINISHED, ENSURED THAT DATA FOR ALL MODELS IN DOWNLOADED TO BE READY
 Set restrictions so there must be 3 or more tickers - DONE 
-Understandable error messages ex. when someone enters a ticker we don't have
+Understandable error messages ex. when someone enters a ticker we don't have - DONE 
 Review JS code
 Deploy to AWS

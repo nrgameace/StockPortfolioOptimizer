@@ -10,13 +10,41 @@
             //const tickerData = tickers.value;
             var rawTickerData = tickers.value;
             const tickerData = rawTickerData.split(',');
+            const modelList = ["AAPL","MSFT","NVDA","AMZN","JNJ","JPM","XOM","CAT","PG","NEE"];
+            let validData = true;
 
             outputParagraph.textContent = "LOADING";
 
+            for (const ticker of tickerData)
+            {
+                if (!modelList.includes(ticker))
+                {
+                    validData = false;
+                    break;
+                }
+            }
+            
+            
+
+            
+
             if (!tickerData || isNaN(initialBudget.value) || tickerData.length < 3) {
-            outputParagraph.textContent = "Please enter three or more stock tickers and a valid initial budget.";
-            return;
-        }
+                outputParagraph.textContent = "Please enter three or more stock tickers. Comma separated with no spaces.";
+                return;
+            }
+
+            if (!validData)
+            {
+                outputParagraph.textContent = "One of the tickers entered above is not in the avaliable list above. Please enter a stock symbol from above.";
+                return;
+            }
+
+            let initialMoney = initialBudget.value;
+            if (initialMoney.length === 0)
+            {
+                outputParagraph.textContent = "Please input your initial budget.";
+                return;
+            }
         
             outputParagraph.textContent = "Sending data to API for processing...";
 
@@ -29,7 +57,7 @@
             // Must match Pydantic model specified earlier
             body: JSON.stringify({
                 tickers: tickerData, 
-                initial_value: initialBudget.value,
+                initial_value: initialMoney,
                 weights: [],
                 expected_return: 0,
                 expected_variance: 0,
