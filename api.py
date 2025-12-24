@@ -7,11 +7,12 @@ app = FastAPI()
 
 # Allowed servers
 origins = [
-    # Allow requests from localhost on port 8080
+    # Local development
     "http://localhost:8000",
-    # Allows requests from any origin (e.g., file:// or any other local port) - USE WITH CAUTION IN PRODUCTION!
     "http://127.0.0.1:8000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    # CloudFront URL
+    "https://d2h8y2m1123u28.cloudfront.net/"
 ]
 
 # 2. ADD THE MIDDLEWARE TO THE APP

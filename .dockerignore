@@ -1,0 +1,10 @@
+frontend/
+.git
+.gitignore
+__pycache__/
+notebooks/
+results/
+sql/
+.env
+localhost.session.sql
+todo.txt
