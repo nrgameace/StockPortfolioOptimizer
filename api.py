@@ -12,7 +12,9 @@ origins = [
     "http://127.0.0.1:8000",
     "http://127.0.0.1:3000",
     # CloudFront URL
-    "https://d2h8y2m1123u28.cloudfront.net/"
+    "https://d2h8y2m1123u28.cloudfront.net/",
+
+    "https://s3fathmwjw.us-east-1.awsapprunner.com/"
 ]
 
 # 2. ADD THE MIDDLEWARE TO THE APP
@@ -54,3 +56,7 @@ async def process_stock_and_budget_data(data: StockBudgetInput):
         "expected_variance": expected_variance,
         
     }
+
+@app.get("/")
+async def root():
+    return {"status": "ok"}

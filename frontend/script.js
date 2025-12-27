@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const initialBudget = document.getElementById("budget");
     const myButton = document.getElementById("submit");
     const outputParagraph = document.getElementById("output");
-    const API_URL = "http://127.0.0.1:8000/submit-portfolio";
+    const API_URL = "http://54.211.60.10:80/submit-portfolio";
 
     myButton.addEventListener("click", function (event) {
         event.preventDefault(); // Prevents page refresh after button click
