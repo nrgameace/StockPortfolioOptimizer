@@ -31,6 +31,7 @@ origins = [
     "http://35.172.69.226:8000",
     "http://35.172.69.226:443",
     "http://35.172.69.226:80",
+    "https://portfoliooptimizer.nickolasregas.com",
 
 ]
 
