@@ -5,13 +5,14 @@ import pandas as pd
 import os
 import joblib
 import numpy as np
+from .config import get_models_path, get_data_path
 
 def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"], horizon = 1, start_row = 0, end_row = None):
 
     #Define the path to the data
     project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-    data_dir = os.path.join(project_root, "StockPortfolioOptimizer", "data", "raw")
-    model_dir = os.path.join(project_root, "StockPortfolioOptimizer","models")
+    data_dir = get_data_path()
+    model_dir = get_models_path()
     os.makedirs(data_dir, exist_ok=True)
 
     path = os.path.join(data_dir,"TRAINING_DATA.csv")

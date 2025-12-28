@@ -2,14 +2,14 @@
 import pandas as pd
 import numpy as np
 import os
+from .config import get_data_path
 
 class BacktestEngine:
 
     # Constructor for Backtest Engine
     def __init__(self, initial_value: float, tickers: list, start_date):
         # Define dataset path
-        project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-        data_dir = os.path.join(project_root, "StockPortfolioOptimizer", "data", "raw")
+        data_dir = get_data_path()
         path = os.path.join(data_dir,"TRAINING_DATA.csv")
 
         # Initialize instance variables

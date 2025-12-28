@@ -2,12 +2,12 @@ import os
 import time
 import pandas as pd
 import yfinance as yf
+from .config import get_data_path
 
 def download_stocks(tickers, start_date='2020-01-01', end_date='2025-01-01'):
 
     # Define project root and data directory
-    project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-    data_dir = os.path.join(project_root, "data", "raw")
+    data_dir = get_data_path()
     os.makedirs(data_dir, exist_ok=True)
 
     # Download stock data

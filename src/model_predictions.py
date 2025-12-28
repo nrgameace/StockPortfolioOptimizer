@@ -1,12 +1,12 @@
 import pandas as pd
 import os
 from joblib import load
+from .config import get_data_path, get_models_path
 
 
 def model_predictions(tickers, day, end_date, horizon = 1):
     models = load_models(tickers)
-    project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-    data_dir = os.path.join(project_root, "StockPortfolioOptimizer","data","raw")
+    data_dir = get_data_path()
     path = os.path.join(data_dir,"TRAINING_DATA.csv")
     df = pd.read_csv(path)
     mu_vector = []
@@ -37,8 +37,7 @@ def model_predictions(tickers, day, end_date, horizon = 1):
 
 
 def load_models(tickers):
-    project_root = os.path.abspath(os.path.join(os.getcwd(), ".."))
-    model_dir = os.path.join(project_root, "StockPortfolioOptimizer","models")
+    model_dir = get_models_path()
     models = []
 
     for ticker in tickers:
