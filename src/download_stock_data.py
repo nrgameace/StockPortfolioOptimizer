@@ -2,7 +2,8 @@ import os
 import time
 import pandas as pd
 import yfinance as yf
-from .config import get_data_path
+#from .config import get_data_path
+from config import get_data_path
 
 def download_stocks(tickers, start_date='2020-01-01', end_date='2025-01-01'):
 

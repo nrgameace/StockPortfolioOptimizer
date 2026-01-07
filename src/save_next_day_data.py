@@ -1,9 +1,11 @@
 import yfinance as yf
 import pandas as pd
 import time
-from .config import get_data_path
+#from .config import get_data_path
 import os
 from datetime import date
+
+from config import get_data_path
 
 def download_next_day_data(tickers: list):
     all_data = pd.DataFrame()

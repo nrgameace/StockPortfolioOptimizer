@@ -5,7 +5,9 @@ import pandas as pd
 import os
 import joblib
 import numpy as np
-from .config import get_models_path, get_data_path
+#from .config import get_models_path, get_data_path
+
+from config import get_models_path, get_data_path
 
 def train_models(tickers = ["AAPL", "MSFT", "NVDA", "AMZN", "JNJ", "JPM", "XOM", "CAT", "PG", "NEE"], horizon = 1, start_row = 0, end_row = None):
 

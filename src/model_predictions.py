@@ -1,7 +1,8 @@
 import pandas as pd
 import os
 from joblib import load
-from .config import get_data_path, get_models_path
+#from .config import get_data_path, get_models_path
+from config import get_data_path, get_models_path
 
 
 def model_predictions(tickers, day, end_date, horizon = 1):

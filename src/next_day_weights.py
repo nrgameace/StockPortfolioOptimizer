@@ -1,10 +1,15 @@
 import pandas as pd
-from .optimized_weights import optimizer
-from .model_predictions import load_models
 import os
-from .save_next_day_data import download_next_day_data
-from .config import get_data_path
 from datetime import date
+#from .save_next_day_data import download_next_day_data
+#from .config import get_data_path
+#from .optimized_weights import optimizer
+#from .model_predictions import load_models
+
+from save_next_day_data import download_next_day_data
+from config import get_data_path
+from optimized_weights import optimizer
+from model_predictions import load_models
 
 def next_day_weights(tickers: list, initial_value: float):
 

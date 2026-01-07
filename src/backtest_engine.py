@@ -2,8 +2,8 @@
 import pandas as pd
 import numpy as np
 import os
-from .config import get_data_path
-
+#from .config import get_data_path
+from config import get_data_path
 class BacktestEngine:
 
     # Constructor for Backtest Engine
@@ -27,7 +27,7 @@ class BacktestEngine:
         for ticker in self.tickers:
             returns_for_day.append(day_data[f"{ticker}_Returns"])
         
-        weighted_return = np.dot(weights, returns_for_day)
+        weighted_return = np.dot(weights[0], returns_for_day)
         self.current_value = self.current_value * (1 + weighted_return)
         self.values.append(self.current_value)
         self.day += 1
