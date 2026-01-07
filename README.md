@@ -6,7 +6,7 @@
 [![CVXPY](https://img.shields.io/badge/CVXPY-1.5.3-green.svg)](https://www.cvxpy.org/)
 [![AWS](https://img.shields.io/badge/AWS-Deployed-FF9900.svg)](https://aws.amazon.com/)
 
-An enterprise-grade, ML-powered portfolio optimization platform that combines advanced machine learning with modern portfolio theory to deliver optimal asset allocation strategies. Built with production-ready infrastructure including a custom backtesting engine, RESTful API, and full AWS deployment.
+An ML-powered portfolio optimization platform that combines advanced machine learning with modern portfolio theory to deliver optimal asset allocation strategies. Built with a custom backtesting engine, RESTful API, and full AWS deployment.
 
 🌐 **Live Demo**: [Click_Me!](d2h8y2m1123u28.cloudfront.net)
 
