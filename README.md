@@ -8,7 +8,7 @@
 
 An ML-powered portfolio optimization platform that combines advanced machine learning with modern portfolio theory to deliver optimal asset allocation strategies. Built with a custom backtesting engine, RESTful API, and full AWS deployment.
 
-🌐 **Live Demo**: [Click_Me!](d2h8y2m1123u28.cloudfront.net)
+🌐 **Live Demo**: [Click_Me!](https://d2h8y2m1123u28.cloudfront.net)
 
 ## 🎯 Project Overview
 
