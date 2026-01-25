@@ -18,17 +18,26 @@ class BacktestEngine:
         self.current_value = initial_value
         self.values = [initial_value]
         self.tickers = tickers
+        self.previous_weights = None
       
     # Simulates the return for one day and calculates the new portfolio value 
     def simulate_one_day(self, weights):
         day_data = self.data.iloc[self.day]
         returns_for_day = []
-
+        weighted_return = 0
+        RATE = 0.02
         for ticker in self.tickers:
             returns_for_day.append(day_data[f"{ticker}_Returns"])
-        
+        transaction_costs = 0
+        if self.previous_weights is not None:
+            trades = np.abs(weights[0] - self.previous_weights) * self.current_value
+            transaction_costs = np.sum(trades * RATE)
+
+        self.previous_weights = weights[0]
         weighted_return = np.dot(weights[0], returns_for_day)
-        self.current_value = self.current_value * (1 + weighted_return)
+
+
+        self.current_value = self.current_value * (1 + weighted_return) - transaction_costs
         self.values.append(self.current_value)
         self.day += 1
 
@@ -44,7 +53,7 @@ class BacktestEngine:
         num_days = len(self.values) - 1
         cagr = (self.current_value / self.values[0])**(252 / num_days) - 1
 
-        daily_volatility = np.std(daily_returns)
+        daily_volatility = np.std(daily_returns,ddof=1)
 
         sharpe_ratio = (np.mean(daily_returns) / daily_volatility) * np.sqrt(252)
 

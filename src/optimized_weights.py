@@ -11,7 +11,7 @@ def optimizer(mu_vector: list, covariance_matrix):
     objective = cp.Maximize(mu_vector @ w - risk_aversion * cp.quad_form(w, covariance_matrix))
 
     # Constraints: weights sum to 1, no short-selling, no stock can dominate over 40%
-    constraints = [cp.sum(w) == 1, w >= 0, w <= .40]
+    constraints = [cp.sum(w) == 1, w >= 0.05, w <= .40]
 
     prob = cp.Problem(objective, constraints)
     prob.solve()

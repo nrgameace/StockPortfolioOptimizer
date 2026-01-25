@@ -2,7 +2,7 @@ from download_stock_data import download_stocks
 from walk_forward_backtest import walk_forward_backtest
 import matplotlib.pyplot as plt
 
-def main(tickers, new_stocks = False, initial_value = 10000, num_cycles = 5, num_train_days = 60, num_test_days = 30):
+def main(tickers, new_stocks = False, initial_value = 10000, num_cycles = 3, num_train_days = 30, num_test_days = 12):
 
     # Compare predicted values to that of S&P500
     STANDARD_RETURN_RATE = 0.12
@@ -24,6 +24,8 @@ def main(tickers, new_stocks = False, initial_value = 10000, num_cycles = 5, num
     print(weights)
     print(final_values)
     print(metrics["CAGR"])
+    print(metrics["Sharpe Ratio"])
+    print(metrics["Daily Volatility"])
 
     y_value_optimized = y_value_optimized + final_values
 
